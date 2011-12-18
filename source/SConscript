@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+#cross compile SConscript file
+# run 'scons platform=windows' to get a windows executable
+# run 'scons' or 'scons platform=linux' to get a linux executable
+
+if ARGUMENTS.get('platform', 'linux') == 'windows': #windows build
+	env = Environment(tools = [], LIBS=['mingw32', 'SDLmain', 'SDL'])
+	env.Tool('crossmingw', toolpath = ['../scons-tools']) # load helper tool to setup the MinGW environment
+else: #linux build
+	env = Environment(LIBS=['SDL'])
+
+env.MergeFlags('--std=c++0x') #not necessary
+env.Append(CCFLAGS=['-g', '-Wall']) #not necessary, too
+
+env.Program(target = 'main', source = ['main.cpp'])
